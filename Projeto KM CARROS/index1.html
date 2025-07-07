@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Car KPI - Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    /* Reset básico */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    /* Cores e variáveis */
+    :root {
+      --accent: #FF6F61;
+      --bg-gradient: linear-gradient(180deg, #6dd5fa 0%, #ffffff 100%);
+      --ground-height: 80px;
+      --scroll-speed: 12s;
+      --form-bg: rgba(255, 255, 255, 0.5);
+      --form-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+      --input-border: #ddd;
+      --input-focus: var(--accent);
+      --button-bg: var(--accent);
+      --button-hover: #e65b50;
+      --text-color: #333;
+      --border-radius: 12px;
+      --transition: all 0.3s ease;
+    }
+
+    body {
+      height: 100vh;
+      background: var(--bg-gradient);
+      font-family: 'Inter', sans-serif;
+      color: var(--text-color);
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Chão contínuo */
+    .ground {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: var(--ground-height);
+      background: url('chão-pixel.png') repeat-x bottom;
+      background-size: auto var(--ground-height);
+      image-rendering: pixelated;
+      z-index: 1;
+      animation: groundScroll var(--scroll-speed) linear infinite;
+    }
+    @keyframes groundScroll {
+      from { background-position: 0 0; }
+      to   { background-position: -800px 0; }
+    }
+
+    /* Trabalhadores & Máquina */
+    .workers {
+      position: absolute;
+      bottom: calc(var(--ground-height) - 10px);
+      left: 0;
+      display: flex;
+      align-items: flex-end;
+      gap: 60px;
+      width: 800px;
+      animation: workersScroll var(--scroll-speed) linear infinite;
+      z-index: 2;
+    }
+    .workers img {
+      image-rendering: pixelated;
+      animation: bob 3s ease-in-out infinite;
+    }
+    .workers img:not(.machine) { width: 50px; }
+    .workers .machine { width: 100px; }
+    @keyframes workersScroll {
+      0%   { transform: translateX(800px); }
+      100% { transform: translateX(-800px); }
+    }
+    @keyframes bob {
+      0%,100% { transform: translateY(0); }
+      50%     { transform: translateY(-5px); }
+    }
+
+    /* Carro */
+    .car {
+      position: absolute;
+      bottom: calc(var(--ground-height) - 20px);
+      left: 50%;
+      transform: translateX(-50%);
+      width: 180px;
+      image-rendering: pixelated;
+      z-index: 3;
+      animation: carBounce 1.5s ease-in-out infinite alternate;
+    }
+    @keyframes carBounce {
+      to { transform: translateX(-50%) translateY(-8px); }
+    }
+
+    /* Nuvens */
+    .cloud {
+      position: absolute;
+      background: url('cloud-pixel.png') no-repeat center;
+      background-size: contain;
+      image-rendering: pixelated;
+      opacity: 0.9;
+      animation: cloudsMove var(--scroll-speed) linear infinite;
+      z-index: 4;
+    }
+    .cloud1 { width: 200px; height: 120px; top: 8%; left: -300px; animation-duration: 35s; }
+    .cloud2 { width: 180px; height: 100px; top: 20%; left: -600px; animation-duration: 45s; }
+    .cloud3 { width: 220px; height: 120px; top: 5%; left: -1000px; animation-duration: 40s; }
+    .cloud4 { width: 160px; height: 90px; top: 30%; left: -1500px; animation-duration: 50s; }
+    .cloud5 { width: 240px; height: 130px; top: 15%; left: -2000px; animation-duration: 55s; }
+    .cloud6 { width: 180px; height: 110px; top: 40%; left: -2500px; animation-duration: 38s; }
+    .cloud7 { width: 210px; height: 125px; top: 12%; left: -3200px; animation-duration: 48s; }
+    .cloud8 { width: 170px; height: 100px; top: 28%; left: -3800px; animation-duration: 42s; }
+    @keyframes cloudsMove {
+      from { transform: translateX(0); }
+      to   { transform: translateX(140vw); }
+    }
+
+    /* Logo */
+    .logo {
+      position: absolute;
+      top: 15%;
+      width: 150px;
+      image-rendering: pixelated;
+      opacity: 0;
+      animation: logoFly 45s linear infinite;
+      z-index: 5;
+    }
+    @keyframes logoFly {
+      0%    { opacity: 0; transform: translateX(-200px); }
+      10%   { opacity: 1; transform: translateX(-200px); }
+      90%   { opacity: 1; transform: translateX(100vw); }
+      100%  { opacity: 0; transform: translateX(100vw); }
+    }
+
+    /* Formulário */
+    .form-container {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 360px; padding: 32px;
+      background: var(--form-bg);
+      border-radius: var(--border-radius);
+      box-shadow: var(--form-shadow);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      z-index: 6;
+      transition: var(--transition);
+    }
+    .form-container:hover { transform: translate(-50%, -50%) scale(1.02); }
+    .form-container h1 {
+      font-size: 28px;
+      margin-bottom: 24px;
+      text-align: center;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .form-container label {
+      display: block;
+      margin-bottom: 14px;
+      font-size: 14px;
+    }
+    .form-container input[type="text"],
+    .form-container input[type="number"],
+    .form-container input[type="file"] {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--input-border);
+      border-radius: var(--border-radius);
+      font-size: 15px;
+      margin-top: 6px;
+      transition: var(--transition);
+      background: #fff;
+    }
+    .form-container input:focus {
+      border-color: var(--input-focus);
+      box-shadow: 0 0 6px rgba(255,111,97,0.5);
+      outline: none;
+    }
+    .form-container button {
+      width: 100%;
+      padding: 14px;
+      background: var(--button-bg);
+      border: none;
+      border-radius: var(--border-radius);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      margin-top: 18px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .form-container button:hover {
+      background: var(--button-hover);
+      transform: translateY(-2px);
+    }
+    #preview {
+      display: block;
+      margin: 12px auto;
+      max-width: 100%;
+      border-radius: var(--border-radius);
+      border: 2px solid var(--accent);
+    }
+
+    @media (max-width: 480px) {
+      .form-container { width: 90%; padding: 20px; }
+      .cloud { display: none; }
+      .car { width: 140px; }
+      .workers img:not(.machine) { width: 40px; }
+      .workers .machine { width: 80px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="ground"></div>
+  <div class="workers">
+    <img src="trabalhador_1-removebg-preview.png" alt="Trabalhador 1" />
+    <img src="trabalhador_2-removebg-preview.png" alt="Trabalhador 2" />
+    <img src="trabalhador_3-removebg-preview.png" alt="Trabalhador 3" />
+    <img src="trabalhador_4-removebg-preview.png" alt="Trabalhador 4" />
+    <img src="trabalhador_5-removebg-preview.png" alt="Trabalhador 5" />
+    <img src="trator-pixel.png" alt="Máquina" class="machine" />
+  </div>
+  <img src="car-pixel.png" alt="Carro Pixel" class="car" />
+
+  <div class="cloud cloud1"></div>
+  <div class="cloud cloud2"></div>
+  <div class="cloud cloud3"></div>
+  <div class="cloud cloud4"></div>
+  <div class="cloud cloud5"></div>
+  <div class="cloud cloud6"></div>
+  <div class="cloud cloud7"></div>
+  <div class="cloud cloud8"></div>
+
+  <img src="logo-mse.png" alt="Logo MSE" class="logo" />
+
+  <div class="form-container">
+    <h1>Envio de KPI de KM</h1>
+    <form id="kpiForm">
+      <label>Placa
+        <input type="text" name="plate" required placeholder="ABC-1234" />
+      </label>
+      <label>Modelo
+        <input type="text" name="model" required placeholder="Ford Cargo" />
+      </label>
+      <label>Quilometragem (km)
+        <input type="number" name="km" required placeholder="0" min="0" />
+      </label>
+      <label>Foto do Painel
+        <input type="file" name="photo" required accept="image/*" />
+      </label>
+      <img id="preview" alt="Pré-visualização da foto" src="#" style="display:none;">
+      <button type="submit">Enviar KPI 🚀</button>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById('kpiForm');
+    const photoInput = form.querySelector('input[name="photo"]');
+    const preview = document.getElementById('preview');
+    photoInput.addEventListener('change', e => {
+      const file = e.target.files[0];
+      if (file) {
+        preview.src = URL.createObjectURL(file); preview.style.display = 'block';
+      } else { preview.style.display = 'none'; }
+    });
+    form.addEventListener('submit', e => { e.preventDefault(); alert('KPI enviado com sucesso!'); form.reset(); preview.style.display = 'none'; });
+  </script>
+</body>
+</html>
