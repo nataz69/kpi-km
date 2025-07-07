@@ -259,10 +259,41 @@
 
   <!-- Script de envio -->
   <script>
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwPZczc-IQtGM0Vf_HVfl1a2hQu4MNi6zWnb51pbeaC-fKv8UroT0ciOSmA5J1aR6eExQ/exec';
-    const form = document.getElementById('kpiForm');
-    const preview = document.getElementById('preview');
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwPZczc-IQtGM0Vf_HVfl1a2hQu4MNi6zWnb51pbeaC-fKv8UroT0ciOSmA5J1aR6eExQ/exec';
+  const form = document.getElementById('kpiForm');
+  const preview = document.getElementById('preview');
 
+  form.photo.addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (file) {
+      preview.src = URL.createObjectURL(file);
+      preview.style.display = 'block';
+    } else {
+      preview.style.display = 'none';
+    }
+  });
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const data = new FormData(form);
+    fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'cors',
+      body: data
+    })
+    .then(r => r.text())
+    .then(() => {
+      alert('Enviado com sucesso!');
+      form.reset();
+      preview.style.display = 'none';
+    })
+    .catch(err => {
+      console.error(err);
+      alert('Erro ao enviar, veja o console.');
+    });
+  });
+    
+</script>
     // Preview da imagem
     form.photo.addEventListener('change', e => {
       const file = e.target.files[0];
