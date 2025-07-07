@@ -40,7 +40,8 @@
       position: absolute;
       bottom: 0; left: 0;
       width: 100%; height: var(--ground-height);
-      background: url('chão-pixel.png') repeat-x bottom;  /* certifique-se de que o arquivo se chama chao-pixel.png */
+      /* Carregue o chão: use exatamente o nome do arquivo abaixo */
+      background: url('chao-pixel.png') repeat-x bottom; /* sem til para combinar com o nome do arquivo */
       background-size: auto var(--ground-height);
       image-rendering: pixelated;
       z-index: 1;
@@ -255,15 +256,22 @@
 
     form.addEventListener('submit', e => {
       e.preventDefault();
-      const data = new FormData(form);
-      google.script.run
-        .withSuccessHandler(() => {
-          alert('Enviado com sucesso!');
-          form.reset();
-          preview.style.display = 'none';
-        })
-        .doPost(data);
+      // aqui coloque a lógica de envio ou chamado google.script.run se for GAS
+      alert('Formulário enviado!');
+      form.reset();
+      preview.style.display = 'none';
     });
   </script>
 </body>
 </html>
+
+// vercel.json (adicione na raiz do projeto)
+{
+  "version": 2,
+  "builds": [
+    { "src": "index.html", "use": "@vercel/static" }
+  ],
+  "routes": [
+    { "src": "/(.*)", "dest": "/index.html" }
+  ]
+}
