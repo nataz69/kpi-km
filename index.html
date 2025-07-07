@@ -41,7 +41,7 @@
       bottom: 0; left: 0;
       width: 100%; height: var(--ground-height);
       /* Carregue o chão: use exatamente o nome do arquivo abaixo */
-      background: url('chao-pixel.png') repeat-x bottom; /* sem til para combinar com o nome do arquivo */
+      background: url('chão-pixel.png') repeat-x bottom; /* sem til para combinar com o nome do arquivo */
       background-size: auto var(--ground-height);
       image-rendering: pixelated;
       z-index: 1;
@@ -265,13 +265,3 @@
 </body>
 </html>
 
-// vercel.json (adicione na raiz do projeto)
-{
-  "version": 2,
-  "builds": [
-    { "src": "index.html", "use": "@vercel/static" }
-  ],
-  "routes": [
-    { "src": "/(.*)", "dest": "/index.html" }
-  ]
-}
